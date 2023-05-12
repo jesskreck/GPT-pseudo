@@ -7,6 +7,7 @@ import { Configuration, OpenAIApi } from "openai"
 
 // local imports
 import userRouter from "./routes/userRoutes.js";
+import chatRouter from "./routes/chatRoutes.js";
 
 // loads .env content into process.env
 dotenv.config();
@@ -30,7 +31,7 @@ app.use(cors());
 //// ENDPOINTS 
 // base endpoint for userRouter. Defined as "/api" because necessary for deploying on Vercel
 app.use("/api/users", userRouter)
-
+app.use("/api/chats", chatRouter)
 
 
 // MONGOOSE
@@ -48,6 +49,7 @@ mongoose
 
 // OPENAI API
 //STUB - change /completions to actual route where fetch result is coming back
+//TODO have prompt endroute. put this function in chatController
 app.post("/prompt", async (req, res) => {
   // res.send("testing")
   // console.log(req.body);
@@ -67,6 +69,9 @@ app.post("/prompt", async (req, res) => {
     const response = await fetch("https://api.openai.com/v1/chat/completions", configuration)
     const data = await response.json()
     console.log(data);
+    //TODO send data to MongoDB
+
+    // sending back data from OpenAI API to frontend:
     res.send(data)
   } catch (error) {
       console.error(error)
