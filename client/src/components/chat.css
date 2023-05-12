@@ -1,0 +1,23 @@
+.sidebar{
+    background-color: darkslategrey;
+    color: #fff
+}
+
+.sidebar button {
+    width: 100%;
+}
+
+.chat-section{
+    background-color: lightgrey;
+    position: relative;
+}
+
+.chat-bottom{
+    position: absolute;
+    bottom: 0;
+}
+
+textarea{
+    max-height: 200px;
+    max-width: 800px
+}
