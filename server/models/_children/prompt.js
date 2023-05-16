@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import messageSchema from "./message"
+import messageSchema from "./message.js"
 
 // for chat completion request from OpenAI API
 const promptSchema = new mongoose.Schema({

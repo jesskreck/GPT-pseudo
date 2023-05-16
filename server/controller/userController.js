@@ -34,18 +34,18 @@ const getUserById = async (req, res) => {
 
 const createUser = async (req, res) => {
     console.log(req.body);
-    // const newUser = new User({
-    //     email: req.body.email,
-    //     password: req.body.password
-    // })
-    // try {
-    //     const result = await newUser.save();
-    //     console.log('result create user:>> ', result);
-    //     res.status(200).json(result)
-    // } catch (error) {
-    //     console.log(error);
-    //     res.status(500).send("server error");
-    // }
+    const newUser = new User({
+        email: req.body.email,
+        password: req.body.password
+    })
+    try {
+        const result = await newUser.save();
+        console.log('result create user:>> ', result);
+        res.status(200).json(result)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("server error");
+    }
 }
 
 

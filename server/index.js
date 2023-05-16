@@ -44,36 +44,3 @@ mongoose
   }).catch((err) => {
     console.log(err);
   });
-
-
-
-// OPENAI API
-//STUB - change /completions to actual route where fetch result is coming back
-//TODO have prompt endroute. put this function in chatController
-app.post("/prompt", async (req, res) => {
-  // res.send("testing")
-  // console.log(req.body);
-  const configuration = {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-      "Content-Type": "application/json"
-    },
-    
-    body: JSON.stringify({
-      "model": "gpt-3.5-turbo",
-      "messages": [{ "role": "user", "content": req.body.input }]
-    })
-  }
-  try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", configuration)
-    const data = await response.json()
-    console.log(data);
-    //TODO send data to MongoDB
-
-    // sending back data from OpenAI API to frontend:
-    res.send(data)
-  } catch (error) {
-      console.error(error)
-  }
-})

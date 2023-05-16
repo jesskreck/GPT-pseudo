@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import messageSchema from './message'
+import messageSchema from './message.js'
 
 
 const choicesSchema = new mongoose.Schema({
