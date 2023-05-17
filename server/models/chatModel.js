@@ -5,17 +5,19 @@ import responseSchema from "./_children/response.js";
 
 const dialogueSchema = new mongoose.Schema({
     
-    prompts: promptSchema,
-    responses: responseSchema,
-    favorite: { type: Boolean }
+    prompt: String,
+    response: String,
+    promptObject: promptSchema,
+    responseObject: responseSchema,
+    inContext: Boolean,
 
-    //TODO add props here like "add context: boolean"
-
-    //TODO make sure timestamp is generated only once at beginning (created at)
 }, { timestamp: true })
+
+
 
 const chatSchema = new mongoose.Schema({
     //STUB make owner prop work
+    title: String,
     owner: { type: String, default: "owner_placeholder"},
     // owner: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
     history: [dialogueSchema]
