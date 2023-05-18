@@ -1,6 +1,14 @@
+.sidebar, .sidebar button, .chat-section, textarea{
+    padding: 0.5em
+}
+
+.hlg{
+    font-weight: bold;
+}
+
 .sidebar{
     background-color: darkslategrey;
-    color: #fff
+    color: #fff;
 }
 
 .sidebar button {
@@ -8,7 +16,7 @@
 }
 
 .chat-section{
-    background-color: lightgrey;
+    background-color: rgb(235, 235, 235);
     position: relative;
 }
 
@@ -20,4 +28,10 @@
 textarea{
     max-height: 200px;
     max-width: 800px
+}
+
+.dialogue{
+    border: darkslategrey 2px dotted;
+    padding: 1em;
+    margin: 1em;
 }

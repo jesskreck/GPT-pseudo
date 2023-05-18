@@ -4,6 +4,6 @@ const messageSchema = new mongoose.Schema({
     role: { type: String, required: true },
     // content of message
     content: { type: String, required: true },
-}, { timestamps: true })
+}, { timestamp: true })
 
 export default messageSchema

@@ -23,7 +23,5 @@ const responseSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-// would generate a response collection - dont want that!
-// const Response = mongoose.model("response", responseSchema);
 
 export default responseSchema
