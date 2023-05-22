@@ -1,12 +1,12 @@
-.sidebar, .sidebar button, .chat-section, textarea{
-    padding: 0.5em
+.sidebar,
+.sidebar button,
+.chat-grid,
+textarea {
+    padding: 0.5rem
 }
 
-.hlg{
-    font-weight: bold;
-}
 
-.sidebar{
+.sidebar {
     background-color: darkslategrey;
     color: #fff;
 }
@@ -15,23 +15,57 @@
     width: 100%;
 }
 
-.chat-section{
+.chat-grid {
     background-color: rgb(235, 235, 235);
     position: relative;
+    display: grid;
+    grid-template-rows: auto 60% 25%;
 }
 
-.chat-bottom{
-    position: absolute;
-    bottom: 0;
+
+/******GRID HEADER******/
+.chat_header {
+    /* border: green 4px solid */
 }
 
-textarea{
+
+/******GRID DIALOGUES******/
+/* chat_dialogues > dialogue-container > dialogue + token */
+.chat_dialogues {
+    /* border: blue 4px solid; */
+    overflow-y: auto;
+}
+
+
+.dialogue-container > .token, .parameter {
+    padding-left: 1rem;
+    margin-left: 1rem;
+    font-weight: bold;
+}
+
+.dialogue {
+    border: darkslategrey 2px dotted;
+    padding: 1rem;
+    margin: 1rem 1rem 0 1rem;
+}
+
+.token, .parameter {
+    font-size: smaller;
+    color: orange;
+}
+
+.token::after {
+    content: " tokens";
+}
+
+
+/******GRID BOTTOM/TEXTAREA******/
+.chat_bottom {
+    /* border: 4px solid red; */
+    width: 100%;
+}
+
+textarea {
     max-height: 200px;
     max-width: 800px
-}
-
-.dialogue{
-    border: darkslategrey 2px dotted;
-    padding: 1em;
-    margin: 1em;
 }

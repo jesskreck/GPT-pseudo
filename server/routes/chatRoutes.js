@@ -9,8 +9,7 @@ const chatRouter = express.Router()
 chatRouter.get("/test", test)
 chatRouter.post("/completion", sendPrompt)
 chatRouter.get("/completion", getAllChats)
-chatRouter.post("/completion/title", )
-chatRouter.get("/completion/title/:title", getSelectedChat)
+chatRouter.get("/completion/id/:id", getSelectedChat)
 
 
 // chatRouter.get("/completion/id/:number", getChat)

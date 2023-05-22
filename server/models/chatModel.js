@@ -4,9 +4,14 @@ import promptSchema from "./_children/prompt.js";
 import responseSchema from "./_children/response.js";
 
 const dialogueSchema = new mongoose.Schema({
-    
+
     prompt: String,
     response: String,
+    temp: Number,
+    topP: Number,
+    promptTokens: Number,
+    responseTokens: Number,
+    totalTokens: Number,
     promptObject: promptSchema,
     responseObject: responseSchema,
     inContext: Boolean,
@@ -18,7 +23,7 @@ const dialogueSchema = new mongoose.Schema({
 const chatSchema = new mongoose.Schema({
     //STUB make owner prop work
     title: String,
-    owner: { type: String, default: "owner_placeholder"},
+    owner: { type: String, default: "owner_placeholder" },
     // owner: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
     history: [dialogueSchema]
 
