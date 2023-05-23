@@ -30,7 +30,7 @@ app.use(cors());
 
 //// ENDPOINTS 
 // base endpoint for userRouter. Defined as "/api" because necessary for deploying on Vercel
-app.use("/api/users", userRouter)
+app.use("/api/", userRouter)
 app.use("/api/chats", chatRouter)
 
 

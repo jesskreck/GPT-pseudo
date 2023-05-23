@@ -2,6 +2,8 @@
 
 import React, { BrowserRouter, Routes, Route } from "react-router-dom"
 import Chat from "./components/chat"
+import Login from "./pages/login"
+
 import "./app.css"
 
 export default function App() {
@@ -12,17 +14,16 @@ export default function App() {
       <div className="header">
         Header TBA
       </div>
-      
+
       <div className="main">
         <BrowserRouter>
-        <Routes>
-          {/* <Route path="/" element={ } />
-        <Route path="login" element={ } /> */}
-          <Route path="/" element={<Chat />} />
-        </Routes>
-      </BrowserRouter>
+          <Routes>
+            <Route path="login" element={<Login />} />
+            <Route path="/" element={<Chat />} />
+          </Routes>
+        </BrowserRouter>
       </div>
-      
+
       <nav className="footer">
         <p>Made by Jessica</p>
       </nav>

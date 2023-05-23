@@ -6,6 +6,8 @@
 
 
 
+import { encryptPassword, verifyPassword } from "../lib/bcrypt.js";
+import { generateToken } from "../lib/jwt.js";
 import User from "../models/userModel.js";
 
 
@@ -33,20 +35,58 @@ const getUserById = async (req, res) => {
 }
 
 const createUser = async (req, res) => {
-    console.log(req.body);
+    console.log("createUser started");
+    if (!req.body.email || !req.body.password) {
+        return res.status(406).json({ error: "Please fill out all the fields" })
+    }
+    const encryptedPassword = await encryptPassword(req.body.password);
     const newUser = new User({
         email: req.body.email,
-        password: req.body.password
+        password: encryptedPassword
     })
     try {
-        const result = await newUser.save();
-        console.log('result create user:>> ', result);
-        res.status(200).json(result)
+        const registeredUser = await newUser.save();
+        res.status(200).json({
+            message: "Successfully registered!",
+            newUser: registeredUser
+        })
     } catch (error) {
         console.log(error);
-        res.status(500).send("server error");
+        res.status(500).json("server error");
     }
 }
 
 
-export { testingRoute, getUsers, getUserById, createUser }
+
+const loginUser = async (req, res) => {
+    console.log("loginUser started");
+    try {
+        const existingUser = await User.findOne({ email: req.body.email });
+        if (!existingUser) {
+            return res.status(401).json({ error: "no user found" })
+        }
+        if (existingUser) {
+            const verified = await verifyPassword(req.body.password, existingUser.password);
+            if (!verified) {
+                res.status(406).json({ error: "password doesn't match" })
+            }
+            if (verified) {
+                const token = generateToken(existingUser);
+                res.status(200).json({
+                    verified: true,
+                    token: token,
+                    user: {
+                        _id: existingUser._id,
+                        username: existingUser.username,
+                    }
+                })
+            }
+        }
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({ error: "something went wrong.." })
+    }
+}
+
+
+export { testingRoute, getUsers, getUserById, createUser, loginUser }
