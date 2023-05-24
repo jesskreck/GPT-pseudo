@@ -7,7 +7,6 @@ const test = (req, res) => {
 
 
 const sendPrompt = async (req, res) => {
-  console.log('req.body.prompt :>> ', req.body.prompt);
   const configuration = {
     method: "POST",
     headers: {
@@ -67,11 +66,12 @@ const sendPrompt = async (req, res) => {
         // otherwise create new doc in MongoDB
         else {
           const newChat = new Chat();
+          console.log('req.body.owner :>> ', req.body.owner);
 
           //STUB title shown in history list is created here:
           newChat.title = req.body.prompt.slice(0, 25);
+          newChat.owner = req.body.owner;          
 
-          //LINK MongoDB functions
           newChat.history.push({ ...newDialogue });
           await newChat.save();
 

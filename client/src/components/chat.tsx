@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useAuth } from '../hooks/useAuth';
 import "./chat.css"
 
 
@@ -39,6 +40,7 @@ export default function Chat() {
     const [topP, setTopP] = useState(1)
     const [advanced, setAdvanced] = useState(false)
 
+    const {user}  = useAuth()
 
     const promptModes: PromptMode[] = [
         { name: "default", temp: 1, topP: 1 },
@@ -80,11 +82,13 @@ export default function Chat() {
 
 
     const handleSubmit = async () => {
-        setStatus({ status: "loading" })
-        try {
+        setStatus({ status: "loading" });
+        if (user) try {
             const requestBody = selectedChat
-                ? { prompt: prompt, chatId: selectedChat._id, temp: temp, topP: topP }
-                : { prompt: prompt, temp: temp, topP: topP }
+                //if there is a chat - send chatID to add dialogue to existing chat
+                ? { prompt: prompt, temp: temp, topP: topP, chatId: selectedChat._id, }
+                //if there is no chat - send owner to create new chat
+                : { prompt: prompt, temp: temp, topP: topP, owner: user._id }
 
             const response = await fetch("http://localhost:5000/api/chats/completion", {
                 method: "POST",

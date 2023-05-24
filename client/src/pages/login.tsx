@@ -1,12 +1,35 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 type Props = {};
+//REVIEW check the following alternatives
+// leeren Objekttyp
+// type Props = Record<string, never>;
+// Objekttyp der beliebige Eigenschaften haben kann
+// type Props = object;
+// beliebigen Typ
+// type Props = unknown;
 
-function Login({}: Props) {
+function Login({ }: Props) {
+
+  //activate navigate hook
   const navigate = useNavigate();
-  const { login } = useAuth();
+  //active auth hook
+  const { login, register } = useAuth();
+
+  //check if there's already a token (=user) in local storage saved
+  useEffect(() => {
+    const checkForToken = () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        // Setze den Nutzerzustand in deinem AuthContext oder einer anderen geeigneten Stelle
+        // Beispiel: setAuthenticated(true);
+      }
+    };
+
+    checkForToken();
+  }, []);
 
   // Record<K, V> is a utility type that represents an object type with keys of type K and values of type V
   // in this case: formData has string keys and string values
@@ -26,7 +49,7 @@ function Login({}: Props) {
       await login(formData.email, formData.password);
       navigate('/chat');
     } catch (error) {
-      // Handle login error
+      console.log(error)
     }
   };
 
@@ -34,9 +57,11 @@ function Login({}: Props) {
     e.preventDefault();
 
     try {
-      // Register logic
+      await register(formData.email, formData.password);
+      //TODO add confirmation message
+      console.log("Registration successful");
     } catch (error) {
-      // Handle registration error
+      console.log(error);
     }
   };
 
