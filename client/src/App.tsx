@@ -1,9 +1,6 @@
-//NOTE app.tsx === app.js
-
-import React, { BrowserRouter, Routes, Route } from "react-router-dom"
+import { Routes, Route } from "react-router-dom"
 import Chat from "./components/chat"
 import Login from "./pages/login"
-
 import "./app.css"
 
 export default function App() {
@@ -16,12 +13,11 @@ export default function App() {
       </div>
 
       <div className="main">
-        <BrowserRouter>
-          <Routes>
-            <Route path="login" element={<Login />} />
-            <Route path="/" element={<Chat />} />
-          </Routes>
-        </BrowserRouter>
+        <Routes>
+          {/*TODO add route for "/" with homepage content  */}
+          <Route path="login" element={<Login />} />
+          <Route path="chat" element={<Chat />} />
+        </Routes>
       </div>
 
       <nav className="footer">

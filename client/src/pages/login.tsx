@@ -1,40 +1,18 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-
+import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 type Props = {};
-//REVIEW check the following alternatives
-// leeren Objekttyp
-// type Props = Record<string, never>;
-// Objekttyp der beliebige Eigenschaften haben kann
-// type Props = object;
-// beliebigen Typ
-// type Props = unknown;
 
+function Login({}: Props) {
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-type SubmitLoginData = {
-  email: string;
-  password: string;
-};
-
-function Login({ }: Props) {
-
-  //check if there's already a token (=user) in local storage saved
-  useEffect(() => {
-    const checkForToken = () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        // Setze den Nutzerzustand in deinem AuthContext oder einer anderen geeigneten Stelle
-        // Beispiel: setAuthenticated(true);
-      }
-    };
-
-    checkForToken();
-  }, []);
-
-
-  const [formData, setFormData] = useState<SubmitLoginData>({
-    email: "",
-    password: "",
+  // Record<K, V> is a utility type that represents an object type with keys of type K and values of type V
+  // in this case: formData has string keys and string values
+  const [formData, setFormData] = useState<Record<string, string>>({
+    email: '',
+    password: '',
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,34 +23,10 @@ function Login({ }: Props) {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      console.log(response);
-
-      if (response.ok) {
-        const data = await response.json();
-        const { token } = data;
-
-        // Speichere den Token im Local Storage
-        localStorage.setItem('token', token);
-
-        // Setze den Nutzerzustand in deinem AuthContext oder einer anderen geeigneten Stelle
-        // Beispiel: setAuthenticated(true);
-
-        // Weiterleitung zur nächsten Seite oder Ausführung anderer logischer Schritte
-        // Beispiel: history.push('/dashboard');
-      } else {
-        // Handhabe Fehler bei der Authentifizierung
-        // Beispiel: setError('Invalid credentials');
-      }
+      await login(formData.email, formData.password);
+      navigate('/chat');
     } catch (error) {
-      // Handhabe allgemeine Fehler
-      console.log(error);
+      // Handle login error
     }
   };
 
@@ -80,23 +34,9 @@ function Login({ }: Props) {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      console.log(response);
-      
-      if (response.ok) {
-        const data = await response.json();
-        const { token } = data;
-        localStorage.setItem('token', token);
-      }
-
+      // Register logic
     } catch (error) {
-      console.log(error);
+      // Handle registration error
     }
   };
 

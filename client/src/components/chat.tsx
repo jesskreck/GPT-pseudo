@@ -170,7 +170,8 @@ export default function Chat() {
 
                 <div className="chat_dialogues">
                     {selectedChat &&
-                        //null-check for selectedChat.history = if selectedChat is defined but selectedChat.history is undefined, mapping won't be performed
+                        //null-check (= "?") for selectedChat.history = if selectedChat is defined but selectedChat.history is undefined, mapping won't be performed
+                        // if history would not be an optional property in the Chat interface, we would not need the null-check! remember: it
                         selectedChat.history?.map((dialogue, index) => (
                             <div key={index} className='dialogue-container'>
                                 <div className='dialogue'>
