@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useAuth } from '../hooks/useAuth';
+// import { useAuth } from '../hooks/useAuth';
 import "./chat.css"
 
 
@@ -40,7 +40,7 @@ export default function Chat() {
     const [topP, setTopP] = useState(1)
     const [advanced, setAdvanced] = useState(false)
 
-    const {user}  = useAuth()
+    // const {user}  = useAuth()
 
     const promptModes: PromptMode[] = [
         { name: "default", temp: 1, topP: 1 },

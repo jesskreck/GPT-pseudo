@@ -91,7 +91,8 @@ const sendPrompt = async (req, res) => {
 
 const getAllChats = async (req, res) => {
   try {
-    const chats = await Chat.find()
+    const ownerId = req.body.owner;
+    const chats = await Chat.find({ owner: ownerId });
     if (chats) {
       res.status(200).json(chats)
     }

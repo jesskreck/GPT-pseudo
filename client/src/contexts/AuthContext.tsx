@@ -1,5 +1,15 @@
 import React, { ReactNode, createContext, useState, useEffect } from 'react';
 
+///////MAIN INTERFACE FOR CONTEXT
+interface AuthContextType {
+  authState: AuthState;
+  user: User | undefined;
+  register: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+}
+
+///////"SUB"INTERFACES 
 interface AuthState {
   isAuthenticated: boolean;
   token: string | null;
@@ -10,22 +20,21 @@ interface User {
   _id: string
 }
 
-export interface AuthContextType {
-  authState: AuthState;
-  user: User | undefined;
-  register: (email: string, password: string) => Promise<void>;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-}
-
+///////VARIABLES
 const initialAuthState: AuthState = {
   isAuthenticated: false,
   token: null,
 };
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const AuthProvider = ({ children }: { children: ReactNode }) => {
+//STEP 1: creating the context
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+
+//STEP 2: creating the provider
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+
+  //STEP 3: creating states and functions that should be saved in context
   const [authState, setAuthState] = useState<AuthState>(initialAuthState);
   const [user, setUser] = useState<User | undefined>(undefined);
 
@@ -99,10 +108,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authState, login, logout, register, user }}>
+    //STEP 4: return the context provider and add needed states/functions in value
+    <AuthContext.Provider value={{ authState, user, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
-export { AuthContext, AuthProvider };

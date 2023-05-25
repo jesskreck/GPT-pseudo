@@ -1,33 +1,34 @@
 import { Routes, Route } from "react-router-dom"
 import Chat from "./components/chat"
-import Login from "./pages/login"
-import { useAuth } from "./hooks/useAuth"
+import Register from "./pages/Register.jsx"
+import Login from "./pages/Login"
+// import { useAuth } from "./hooks/useAuth"
+import { AuthContext } from "./contexts/AuthContext"
 import "./app.css"
-import { useEffect } from "react"
+import { useContext } from "react"
 
 export default function App() {
 
-  const { authState, user, logout } = useAuth()
-  useEffect(() => {
-    console.log("use effect fired");
-  
-  }, [authState])
-  
+  // const { authState, user, logout } = useAuth();
+  // const { authState, user, logout } = useContext(AuthContext)
+
 
   return (
     <div className="app">
       <div className="header">
-        {user
+        <p>Header TBA</p>
+        {/* {user
           ? <p>
             <span>Welcome, {user.email}</span>
             <button onClick={logout}>Logout</button>
           </p>
-          : <p>Header TBA</p>} 
+          : <p>Header TBA</p>}  */}
       </div>
 
       <div className="main">
         <Routes>
           {/*TODO add route for "/" with homepage content  */}
+          <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="chat" element={<Chat />} />
         </Routes>

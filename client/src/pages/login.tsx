@@ -1,6 +1,7 @@
-import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
+import React, { ChangeEvent, FormEvent, useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+// import { useAuth } from '../hooks/useAuth';
+import { AuthContext } from '../contexts/AuthContext';
 
 type Props = {};
 //REVIEW check the following alternatives
@@ -16,7 +17,12 @@ function Login({ }: Props) {
   //activate navigate hook
   const navigate = useNavigate();
   //active auth hook
-  const { login, register } = useAuth();
+  // const { login, register } = useAuth();
+  const { login, register } = useContext(AuthContext);
+  // q: Why does it say that login doesnt exist on type AuthContextType?
+  // a: Because the AuthContextType interface does not include the login function
+  // q: It does - in AuthContext.tsx line 17
+  // a: Yes, but the AuthContextType interface is not the same as the AuthContext
 
   //check if there's already a token (=user) in local storage saved
   useEffect(() => {
@@ -66,21 +72,15 @@ function Login({ }: Props) {
   };
 
   return (
-    <div>
+    <section className='login'>
       <h1>Login</h1>
       <form onSubmit={handleLogin}>
-        <input type="email" name="email" placeholder="email" onChange={handleChange} />
+        <input type="text" name="email" placeholder="email" onChange={handleChange} />
         <input type="password" name="password" placeholder="password" onChange={handleChange} />
         <button type="submit">Login!</button>
       </form>
 
-      <h1>Register</h1>
-      <form onSubmit={handleRegister}>
-        <input type="email" name="email" placeholder="email" onChange={handleChange} />
-        <input type="password" name="password" placeholder="password" onChange={handleChange} />
-        <button type="submit">Register!</button>
-      </form>
-    </div>
+    </section>
   );
 }
 
