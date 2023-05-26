@@ -94,4 +94,12 @@ const loginUser = async (req, res) => {
 }
 
 
-export { testingRoute, getUsers, getUserById, createUser, loginUser }
+
+const getUserWithToken = async(req, res) => {
+    res.status(200).json({
+        _id: req.user._id,
+        email: req.user.email,
+    })
+}
+
+export { testingRoute, getUsers, getUserById, createUser, loginUser, getUserWithToken }

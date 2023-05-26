@@ -3,7 +3,7 @@ import React, { ReactNode, createContext, useState, useEffect } from 'react';
 ///////MAIN INTERFACE FOR CONTEXT
 interface AuthContextType {
   authState: AuthState;
-  user: User | undefined;
+  user: User | null;
   register: (email: string, password: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -36,24 +36,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   //STEP 3: creating states and functions that should be saved in context
   const [authState, setAuthState] = useState<AuthState>(initialAuthState);
-  const [user, setUser] = useState<User | undefined>(undefined);
+  const [user, setUser] = useState<User | null>(null);
 
   //check if user is already logged in when component mounts
   useEffect(() => {
-    getToken();
+    checkForLocalToken();
   }, []);
 
 
-  const getToken = () => {
+  const checkForLocalToken = () => {
     const token = localStorage.getItem('token');
 
     if (token) {
       console.log('Token found in local storage');
-      setAuthState({ isAuthenticated: true, token });
+      fetchUserWithToken(token);
+
     } else {
       console.log('No token found in local storage');
+      setAuthState(initialAuthState);
+      setUser(null)
     }
   };
+
+  const fetchUserWithToken = async (token: string) => {
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', `Bearer ${token}`);
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+    };
+    try {
+      const response = await fetch(`${import.meta.env.VITE_REACT_API_URL}/auth`, requestOptions);
+      const result = await response.json();
+      if (result.ok) {
+        setUser(result);
+        setAuthState({ isAuthenticated: true, token });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const register = async (email: string, password: string) => {
     try {
@@ -78,6 +100,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const login = async (email: string, password: string) => {
+    //NOTE sending the body as URLencoded instead of JSON would be faster (not more secure though)
     try {
       const response = await fetch(`${import.meta.env.VITE_REACT_API_URL}/login`, {
         method: 'POST',
@@ -94,6 +117,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem('token', token);
         setAuthState({ isAuthenticated: true, token });
         setUser(user)
+        console.log('user :>> ', user);
       } else {
         // Handle authentication error
       }
@@ -105,6 +129,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     localStorage.removeItem('token');
     setAuthState(initialAuthState);
+    setUser(null);
   };
 
   return (

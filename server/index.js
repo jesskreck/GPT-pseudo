@@ -8,6 +8,8 @@ import { Configuration, OpenAIApi } from "openai"
 // local imports
 import userRouter from "./routes/userRoutes.js";
 import chatRouter from "./routes/chatRoutes.js";
+import passportConfig from "./config/passport.js";
+import passport from "passport";
 
 // loads .env content into process.env
 dotenv.config();
@@ -25,6 +27,9 @@ app.use(express.urlencoded({extended: true}));
 
 // control which external domains can access my API (Cross Origin Resource Sharing)
 app.use(cors());
+
+// initialize passport middleware
+passportConfig();
 
 
 
