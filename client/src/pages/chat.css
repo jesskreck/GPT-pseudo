@@ -19,7 +19,8 @@ textarea {
     background-color: rgb(235, 235, 235);
     position: relative;
     display: grid;
-    grid-template-rows: auto 60% 25%;
+    grid-template-rows: 1fr 4fr 2fr;
+    max-height: 89.5vh;
 }
 
 
@@ -37,7 +38,7 @@ textarea {
 }
 
 
-.dialogue-container > .token, .parameter {
+.dialogue-container>.token, .parameter {
     padding-left: 1rem;
     margin-left: 1rem;
     font-weight: bold;
@@ -45,19 +46,35 @@ textarea {
 
 .dialogue {
     border: darkslategrey 2px dotted;
-    padding: 1rem;
-    margin: 1rem 1rem 0 1rem;
+    padding: 1rem 1rem 0 1rem;
+    margin: 1rem 2rem 0 2rem;
+    text-align: left;
 }
 
-.token, .parameter {
+.in-context {
+    border: rgb(71, 118, 118) 2px solid;
+}
+
+.token,
+.parameter {
     font-size: smaller;
     color: orange;
+    padding-bottom: 1rem;
 }
 
 .token::after {
     content: " tokens";
 }
 
+.prompt {
+    font-weight: bold;
+}
+
+.parameter-container {
+    padding-left: 3.2rem;
+    font-weight: bold;
+    font-size: smaller;
+}
 
 /******GRID BOTTOM/TEXTAREA******/
 .chat_bottom {

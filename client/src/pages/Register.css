@@ -33,8 +33,11 @@
 }
 
 .register > a, 
-.register > a:visited {
-    color: #fff;
+.register > a:visited,
+.login > a,
+.login > a:visited {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .register > input[type="text"],

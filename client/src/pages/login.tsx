@@ -1,9 +1,8 @@
-import React, { ChangeEvent, FormEvent, useState, useEffect, useContext } from 'react';
+import { ChangeEvent, FormEvent, useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import { useAuth } from '../hooks/useAuth';
 import { AuthContext } from '../contexts/AuthContext';
 
-type Props = {};
 //REVIEW check the following alternatives
 // leeren Objekttyp
 // type Props = Record<string, never>;
@@ -12,18 +11,11 @@ type Props = {};
 // beliebigen Typ
 // type Props = unknown;
 
-function Login({ }: Props) {
+export default function Login() {
 
-  //activate navigate hook
+  const { user, login } = useContext(AuthContext);
   const navigate = useNavigate();
-  //active auth hook
-  // const { login, register } = useAuth();
-  const { login, register } = useContext(AuthContext);
-  // q: Why does it say that login doesnt exist on type AuthContextType?
-  // a: Because the AuthContextType interface does not include the login function
-  // q: It does - in AuthContext.tsx line 17
-  // a: Yes, but the AuthContextType interface is not the same as the AuthContext
-
+  
   //check if there's already a token (=user) in local storage saved
   useEffect(() => {
     const checkForToken = () => {
@@ -33,7 +25,6 @@ function Login({ }: Props) {
         // Beispiel: setAuthenticated(true);
       }
     };
-
     checkForToken();
   }, []);
 
@@ -53,25 +44,19 @@ function Login({ }: Props) {
 
     try {
       await login(formData.email, formData.password);
-      navigate('/chat');
     } catch (error) {
       console.log(error)
     }
   };
 
-  const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const navigateToRegister = () => {
+    navigate('/register');
+  }
 
-    try {
-      await register(formData.email, formData.password);
-      //TODO add confirmation message
-      console.log("Registration successful");
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
+
+  
     <section className='login'>
       <h1>Login</h1>
       <form onSubmit={handleLogin}>
@@ -80,8 +65,13 @@ function Login({ }: Props) {
         <button type="submit">Login!</button>
       </form>
 
+      <p>Want to register a new user?</p>
+      <a className="a" onClick={navigateToRegister}>Register</a>
+
+
+      <>{user && navigate('/chat')}</>
+      
     </section>
+
   );
 }
-
-export default Login;

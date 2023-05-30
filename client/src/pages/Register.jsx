@@ -1,8 +1,9 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./Register.css"
+import "./Register.css";
+import { AuthContext } from "../contexts/AuthContext"
 
 const MAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -12,6 +13,7 @@ const PWD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,24}$/;
 function Register() {
 
     const navigate = useNavigate();
+    const { register } = useContext(AuthContext);
 
 
     const mailRef = useRef();
@@ -37,15 +39,11 @@ function Register() {
     useEffect(() => {
         //test if mail fits regex criteria - if yes set validMail to true. Do this everytime something in mail changes
         const result = MAIL_REGEX.test(mail);
-        console.log(result);
-        console.log(mail);
         setValidMail(result);
     }, [mail]);
 
     useEffect(() => {
         const result = PWD_REGEX.test(pwd);
-        console.log(result);
-        console.log(pwd);
         setValidPwd(result);
     }, [pwd]);
 
@@ -55,7 +53,23 @@ function Register() {
     }, [mail, pwd]);
 
 
-    const handleSignIn = () => {
+    const handleRegister = async (e) => {
+        e.preventDefault();
+        try {
+            const registrated = await register(mail, pwd);
+
+            if (registrated) {
+                console.log("Registration successful");
+                setSuccess(true);
+            }
+            console.log("Registration failed");
+        } catch (error) {
+            console.log(error);
+
+        }
+    };
+
+    const navigateToLogin = () => {
         navigate("/login");
     };
 
@@ -72,7 +86,7 @@ function Register() {
 
             <h1>Register</h1>
 
-            <form>
+            <form onSubmit={handleRegister}>
 
                 <label htmlFor="mail">
                     Email:
@@ -140,16 +154,12 @@ function Register() {
                 <button type="submit">Register!</button>
             </form>
 
-            <p>
-                Already registered?<br />
-                <span className="line">
-                    {/*put router link here*/}
-                    <a onClick={handleSignIn} >Sign In</a>
-                </span>
-            </p>
+            {success ? <p>Registration succesfull! Please switch to login.</p> : <p>Already registered?</p>}
+            <a className="a" onClick={navigateToLogin}>Login</a>
+
         </section>
     );
-};
+}
 
 
 export default Register;

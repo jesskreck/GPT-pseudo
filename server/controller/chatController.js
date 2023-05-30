@@ -1,9 +1,5 @@
 import Chat from "../models/chatModel.js"
 
-const test = (req, res) => {
-  res.send("chat is activated")
-}
-
 
 
 const sendPrompt = async (req, res) => {
@@ -18,14 +14,13 @@ const sendPrompt = async (req, res) => {
       "model": "gpt-3.5-turbo",
       "messages": [{ "role": "user", "content": req.body.prompt }],
       "temperature": req.body.temp,
-      "top_p": req.body.topP 
+      "top_p": req.body.topP
     })
   };
   // 1st TryCatch to send prompt to OpenAI API
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", configuration);
     const fetchedData = await response.json();
-    console.log('fetchedData from OpenAI API:>> ', fetchedData);
     console.log('fetchedData.choices[0].message :>> ', fetchedData.choices[0].message);
 
     // if we got response from API...
@@ -61,25 +56,25 @@ const sendPrompt = async (req, res) => {
           existingChat.history.push({ ...newDialogue });
           await existingChat.save();
 
-          res.status(200).json({ message: "Chat successfully UPDAPTED in MongoDB" })
+          res.status(200).json({ message: "Chat successfully UPDATED in MongoDB", success: true, chatId: chatId })
         }
         // otherwise create new doc in MongoDB
         else {
           const newChat = new Chat();
-          console.log('req.body.owner :>> ', req.body.owner);
 
           //STUB title shown in history list is created here:
           newChat.title = req.body.prompt.slice(0, 25);
-          newChat.owner = req.body.owner;          
+          newChat.owner = req.body.owner;
 
           newChat.history.push({ ...newDialogue });
-          await newChat.save();
+          const chat = await newChat.save();
+          const chatId = chat._id;
 
-          res.status(200).json({ message: "Chat successfully CREATED in MongoDB" })
+          res.status(200).json({ message: "Chat successfully CREATED in MongoDB", success: true, chatId: chatId })
         }
       } catch (error) {
         console.error("Error uploading data:", error);
-        res.status(500).json({ error: "MongoDB data could not be uploaded successfully" })
+        res.status(500).json({ error: "MongoDB data could not be uploaded successfully", success: true })
       }
     }
   } catch (error) {
@@ -91,8 +86,8 @@ const sendPrompt = async (req, res) => {
 
 const getAllChats = async (req, res) => {
   try {
-    const ownerId = req.body.owner;
-    const chats = await Chat.find({ owner: ownerId });
+    const owner = req.query.userId;
+    const chats = await Chat.find({ owner: owner });
     if (chats) {
       res.status(200).json(chats)
     }
@@ -104,24 +99,17 @@ const getAllChats = async (req, res) => {
 
 const getSelectedChat = async (req, res) => {
   const id = req.params.id;
-  console.log('req :>> ', req);
   try {
     const chat = await Chat.findById(id)
     if (!chat) {
-      return res.status(404).json({error: "Chat not found"})
+      return res.status(404).json({ error: "Chat not found" })
     }
     res.status(200).json(chat)
+
   } catch (error) {
     console.error(error)
-    res.status(500).json({error: "internal server error"})
+    res.status(500).json({ error: "internal server error" })
   }
-  // try {
-  //   const title = req.body.selectedChatTitle;
-  //   const chat = await Chat.findOne({ title: title });
-  //   res.status(200).json(chat)
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
 }
 
-export { test, getAllChats, sendPrompt, getSelectedChat }
+export { getAllChats, sendPrompt, getSelectedChat }
