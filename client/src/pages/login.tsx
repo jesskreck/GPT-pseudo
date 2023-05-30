@@ -57,10 +57,12 @@ export default function Login() {
   return (
 
   
-    <section className='login'>
+    <section className='register'>
       <h1>Login</h1>
       <form onSubmit={handleLogin}>
+        <label htmlFor="email">Email:</label>
         <input type="text" name="email" placeholder="email" onChange={handleChange} />
+        <label htmlFor="password">Password:</label>
         <input type="password" name="password" placeholder="password" onChange={handleChange} />
         <button type="submit">Login!</button>
       </form>

@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
 
-
+.register,
+.login {
+    padding-left: 0.5rem;
+}
 
 .register > html {
     font-family: 'Nunito', sans-serif;
@@ -40,14 +43,15 @@
     cursor: pointer;
 }
 
-.register > input[type="text"],
-.register > input[type="password"],
-.register > button,
-.register > textarea {
+.input[type="text"],
+.input[type="password"],
+.button,
+.textarea {
     font-family: 'Nunito', sans-serif;
     font-size: 22px;
     padding: 0.25rem;
     border-radius: 0.5rem;
+    border: 3px red solid;
 }
 
 .register > label,

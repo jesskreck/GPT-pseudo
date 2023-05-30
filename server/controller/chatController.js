@@ -3,16 +3,22 @@ import Chat from "../models/chatModel.js"
 
 
 const sendPrompt = async (req, res) => {
+  const messages = [
+    req.body.context
+      ? { "role": "system", "content": req.body.context } // Add context as a system message
+      : null,
+    { "role": "user", "content": req.body.prompt }
+  ].filter(message => message !== null); // Filter out null values
+
   const configuration = {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
       "Content-Type": "application/json"
     },
-
     body: JSON.stringify({
       "model": "gpt-3.5-turbo",
-      "messages": [{ "role": "user", "content": req.body.prompt }],
+      "messages": messages,
       "temperature": req.body.temp,
       "top_p": req.body.topP
     })

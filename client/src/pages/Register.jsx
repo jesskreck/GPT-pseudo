@@ -62,7 +62,6 @@ function Register() {
                 console.log("Registration successful");
                 setSuccess(true);
             }
-            console.log("Registration failed");
         } catch (error) {
             console.log(error);
 
@@ -101,7 +100,7 @@ function Register() {
                 </label>
 
                 <input
-                    placeholder="Enter email adress"
+                    placeholder="register with email"
                     type="text"
                     //for future reusage: id should match htmlFor of label
                     id="email"
@@ -134,7 +133,7 @@ function Register() {
                 </label>
 
                 <input
-                    placeholder="Enter password"
+                    placeholder="set a password"
                     type="password"
                     id="password"
                     onChange={(e) => setPwd(e.target.value)}

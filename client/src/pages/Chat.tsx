@@ -25,19 +25,14 @@ export default function Chat() {
         getFirstChats()
     }, [])
 
-    //TODO LISTEN (SSE connection) TO SERVER TO UPDATE SCREEN AUTOMATICALLY WHEN NEW DATA AVAILABLE
-    // useEffect(() => {
-    // }, [status])
 
 
-    //REVIEW isnt it smarter to have all these functions in the backend - would save me from typing "Chat" model again. Or is it good practice to have this kind of double check?
     const getFirstChats = async () => {
         const userId = user?._id;
         try {
             const response = await fetch(`http://localhost:5000/api/chats/completion?userId=${userId}`);
             const data = await response.json();
             const chats = data.map((chat: Chat) => ({ _id: chat._id, title: chat.title }));
-            console.log('chats :>> ', chats);
             setChats(chats);
         } catch (error) {
             console.log("Failed to load first chat info");
@@ -49,32 +44,69 @@ export default function Chat() {
 
     const handleSubmit = async () => {
         setStatus({ status: "loading" });
-        if (user) try {
-            const requestBody = selectedChat
-                //if there is a chat - send chatID to add dialogue to existing chat
-                ? { prompt: prompt, temp: temp, topP: topP, chatId: selectedChat._id, }
-                //if there is no chat - send owner to create new chat
-                : { prompt: prompt, temp: temp, topP: topP, owner: user._id }
 
-            const response = await fetch("http://localhost:5000/api/chats/completion", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(requestBody)
-            })
-            const result = await response.json();
-            console.log(result);
-            setStatus({ status: "success" })
+        if (user) {
+            let requestBody;
 
-            //how to update? I manually send back the success:true and the chatId (in backend after response is saved in MongoDB)
-            if (result.success) {
-                handleSelectChat(result.chatId);
+            //SCENARIO 1: first chat, meaing there cant be any context anyway
+            if (!selectedChat) {
+                requestBody = {
+                    prompt: prompt,
+                    temp: temp,
+                    topP: topP,
+                    owner: user._id
+                }
+
+                //...in any other case
+            } else {
+
+                //check if there are dialogues in context
+                const dialoguesInContext = selectedChat?.history?.filter((dialogue) => dialogue.inContext) || [];
+                console.log(dialoguesInContext);
+                //SCENARIO 2: chat yes, context no
+                if (dialoguesInContext.length === 0) {
+                    requestBody = {
+                        prompt: prompt,
+                        temp: temp,
+                        topP: topP,
+                        chatId: selectedChat._id,
+                    }
+                }
+                //SCENARIO 3: chat yes, context yes
+                else {
+                    requestBody = {
+                        prompt: prompt,
+                        temp: temp,
+                        topP: topP,
+                        chatId: selectedChat._id,
+                        context: dialoguesInContext.map((dialogue) => `${dialogue.prompt} ${dialogue.response}`).join(" ")
+                    }
+                }
             }
 
-        } catch (error) {
-            console.error(error);
-            setStatus({ status: "error" })
+            try {
+                console.log("prompt being sent with", requestBody);
+                const response = await fetch("http://localhost:5000/api/chats/completion", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(requestBody)
+                })
+
+                const result = await response.json();
+                console.log(result);
+                setStatus({ status: "success" })
+
+                //update selected chat: I manually send back the success:true and the chatId (in backend after response is saved in MongoDB)
+                if (result.success) {
+                    handleSelectChat(result.chatId);
+                }
+
+            } catch (error) {
+                console.error(error);
+                setStatus({ status: "error" })
+            }
         }
-    };
+    }
 
 
     const handleSelectChat = async (id: string) => {
@@ -176,10 +208,14 @@ export default function Chat() {
                 </div>
 
                 <div className='chat_bottom'>
-                    {status.status === "loading" ? <Spinner /> : null}
                     {status.status === "error" ? <p>An error occurred</p> : null}
-                    <textarea value={prompt} onChange={e => setPrompt(e.target.value)}></textarea>
-                    <button id='submit' onClick={handleSubmit} >Submit</button>
+                    <div className="input">
+                        <textarea value={prompt} onChange={e => setPrompt(e.target.value)}></textarea>
+                        <div className='submit'>
+                            {status.status === "loading" ? <Spinner /> : null}
+                            {status.status === "success" || status.status === "idle" ? <button id='submit' onClick={handleSubmit} >💨</button> : null}
+                        </div>
+                    </div>
 
                     <PromptModes />
 

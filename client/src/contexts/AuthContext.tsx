@@ -111,12 +111,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (response.ok) {
         const data = await response.json();
-        const { token, user } = data;
+        const { user } = data;
 
-        localStorage.setItem('token', token);
-        setAuthState({ isAuthenticated: true, token });
-        setUser(user);
-        console.log('%cFirst user fetch after registration :>> ', "color: blue", user);
+        // localStorage.setItem('token', token);
+        // setAuthState({ isAuthenticated: true, token });
+        // setUser(user);
+        console.log('%cUser registered :>> ', "color: blue", user);
         return true;
       } else {
         return false;

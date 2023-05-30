@@ -46,10 +46,8 @@ const createUser = async (req, res) => {
     })
     try {
         const registeredUser = await newUser.save();
-        const token = generateToken(registeredUser);
         res.status(200).json({
             message: "Successfully registered!",
-            token: token,
             user: {
                 _id: registeredUser._id,
                 email: registeredUser.email,

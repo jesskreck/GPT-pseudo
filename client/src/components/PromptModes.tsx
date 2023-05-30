@@ -5,7 +5,7 @@ export const PromptModes = () => {
 
 
     const { temp, setTemp, topP, setTopP } = useContext(PromptContext)
-    
+
     const [advanced, setAdvanced] = useState(false)
 
 
@@ -34,7 +34,13 @@ export const PromptModes = () => {
                         onClick={() => handleModeClick(mode)}
                     >{mode.name}</button>
                 ))}
+            </div>
 
+
+           
+
+            <div className="advanced">
+                 <div>
                 <input
                     type="checkbox"
                     className='radio'
@@ -45,31 +51,29 @@ export const PromptModes = () => {
                 />
                 <label htmlFor="advancedMode">Advanced Mode</label>
             </div>
+                    <label>Temperature: {temp}</label>
+                    <input
+                        type="range"
+                        min="0"
+                        max="2"
+                        step="0.1"
+                        value={temp}
+                        disabled={!advanced}
+                        onChange={(e) => setTemp(parseFloat(e.target.value))}
+                    />
 
-            <div className="advanced">
-                <label>Temperature: {temp}</label>
-                <input
-                    type="range"
-                    min="0"
-                    max="2"
-                    step="0.1"
-                    value={temp}
-                    disabled={!advanced}
-                    onChange={(e) => setTemp(parseFloat(e.target.value))}
-                />
-            </div>
 
-            <div>
-                <label>TopP: {topP}</label>
-                <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.1"
-                    value={topP}
-                    disabled={!advanced}
-                    onChange={(e) => setTopP(parseFloat(e.target.value))}
-                />
+
+                    <label>TopP: {topP}</label>
+                    <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={topP}
+                        disabled={!advanced}
+                        onChange={(e) => setTopP(parseFloat(e.target.value))}
+                    />
             </div>
         </section>
     )
