@@ -3,13 +3,22 @@ import Chat from "../models/chatModel.js"
 
 
 const sendPrompt = async (req, res) => {
+  // const persona = JSON.parse(req.body.persona);
+  // console.log(persona);
   const messages = [
-    req.body.context
-      ? { "role": "system", "content": req.body.context } // Add context as a system message
+    //add persona as system message if there is one
+    req.body.persona   
+      ? { "role": "system", "content": req.body.persona.message }
       : null,
+    //add chat history as context in system messsages if there are some 
+    req.body.context
+      ? { "role": "system", "content": req.body.context } 
+      : null,
+    //add prompt as user message
     { "role": "user", "content": req.body.prompt }
   ].filter(message => message !== null); // Filter out null values
-
+  console.log('messages :>> ', messages);
+  console.log('req.body.persona :>> ', req.body.persona);
   const configuration = {
     method: "POST",
     headers: {
@@ -69,7 +78,7 @@ const sendPrompt = async (req, res) => {
           const newChat = new Chat();
 
           //STUB title shown in history list is created here:
-          newChat.title = req.body.prompt.slice(0, 25);
+          newChat.title = req.body.persona.name + ": " + req.body.prompt.slice(0, 15);
           newChat.owner = req.body.owner;
 
           newChat.history.push({ ...newDialogue });

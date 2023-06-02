@@ -4,14 +4,14 @@ import { AuthContext } from '../contexts/AuthContext';
 import { PromptContext } from '../contexts/PromptContext';
 import "./chat.css"
 import Spinner from '../components/Spinner1';
-
+import { Personas } from '../components/Personas';
 
 
 
 export default function Chat() {
 
     const { user } = useContext(AuthContext)
-    const { prompt, setPrompt, temp, topP } = useContext(PromptContext)
+    const { prompt, setPrompt, persona, temp, topP } = useContext(PromptContext)
 
     const [status, setStatus] = useState<Status>({ status: "idle" })
 
@@ -32,6 +32,7 @@ export default function Chat() {
         try {
             const response = await fetch(`http://localhost:5000/api/chats/completion?userId=${userId}`);
             const data = await response.json();
+            //move map to the backend
             const chats = data.map((chat: Chat) => ({ _id: chat._id, title: chat.title }));
             setChats(chats);
         } catch (error) {
@@ -48,10 +49,15 @@ export default function Chat() {
         if (user) {
             let requestBody;
 
-            //SCENARIO 1: first chat, meaing there cant be any context anyway
+            //SCENARIO 1: first chat, meaning there cant be any context anyway
             if (!selectedChat) {
                 requestBody = {
                     prompt: prompt,
+                    persona: persona,
+                    // q: Why is persona not send through as an object?
+                    // a: because the backend expects a string, not an object
+                    // q: Where do I change that?
+                    
                     temp: temp,
                     topP: topP,
                     owner: user._id
@@ -148,7 +154,6 @@ export default function Chat() {
     };
 
 
-
     const handleNewChat = () => {
         setSelectedChat(undefined)
     }
@@ -182,7 +187,11 @@ export default function Chat() {
                     {selectedChat ? <h4>Selected Chat: "{selectedChat.title}[...]"</h4> : <h4>no chat selected</h4>}
                 </div>
 
-                <div className="chat_dialogues">
+                <div className={`chat_dialogues ${!selectedChat ? 'personas' : null}`}>
+                    {!selectedChat &&
+                        <Personas />
+                    }
+
                     {selectedChat &&
                         //null-check (= "?") for selectedChat.history = if selectedChat is defined but selectedChat.history is undefined, mapping won't be performed
                         // if history would not be an optional property in the Chat interface, we would not need the null-check! remember: it

@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import promptSchema from "./_children/prompt.js";
 import responseSchema from "./_children/response.js";
 
+
+// sub schema
 const dialogueSchema = new mongoose.Schema({
 
     prompt: String,
@@ -19,7 +21,7 @@ const dialogueSchema = new mongoose.Schema({
 }, { timestamp: true })
 
 
-
+////// MAIN SCHEMA
 const chatSchema = new mongoose.Schema({
     title: String,
     owner: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
@@ -27,7 +29,7 @@ const chatSchema = new mongoose.Schema({
 
 })
 
-
+////////// Model
 const Chat = mongoose.model("chat", chatSchema)
 
 

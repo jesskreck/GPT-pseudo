@@ -39,3 +39,10 @@ interface PromptMode {
   temp: number,
   topP: number,
 }
+
+
+
+interface Persona {
+  name: string,
+  message: string
+}
