@@ -5,6 +5,7 @@ import { PromptContext } from '../contexts/PromptContext';
 import "./chat.css"
 import Spinner from '../components/Spinner1';
 import { Personas } from '../components/Personas';
+import { Sidebar } from '../components/Sidebar';
 
 
 
@@ -32,7 +33,7 @@ export default function Chat() {
         try {
             const response = await fetch(`http://localhost:5000/api/chats/completion?userId=${userId}`);
             const data = await response.json();
-            //move map to the backend
+            //TODO move map to the backend
             const chats = data.map((chat: Chat) => ({ _id: chat._id, title: chat.title }));
             setChats(chats);
         } catch (error) {
@@ -115,31 +116,7 @@ export default function Chat() {
     }
 
 
-    const handleSelectChat = async (id: string) => {
-        try {
-            const response = await fetch(`http://localhost:5000/api/chats/completion/id/${id}`)
-            const result = await response.json();
-
-            // extract only desired props from fetch result
-            const { title, _id, history } = result;
-
-            // map over history array to only extract prompt(string), response(string) and inContext(boolean) from each dialogue item inside
-            const historyExtract = history.map((dialogueItem: Dialogue) => {
-                const { prompt, response, temp, topP, inContext, promptTokens, responseTokens, totalTokens } = dialogueItem;
-                return { prompt, response, temp, topP, inContext, promptTokens, responseTokens, totalTokens };
-            })
-            // voila: set selectedChat to be our chatExtract! 
-            const chatExtract: Chat = {
-                title,
-                _id,
-                history: historyExtract
-            };
-            setSelectedChat(chatExtract);
-            scrollToBottom();
-        } catch (error) {
-            console.error(error)
-        }
-    }
+   
 
 
     const toggleInContext = (index: number) => {
@@ -154,9 +131,7 @@ export default function Chat() {
     };
 
 
-    const handleNewChat = () => {
-        setSelectedChat(undefined)
-    }
+   
 
     const scrollToBottom = () => {
         chatDialoguesRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -167,18 +142,7 @@ export default function Chat() {
     return (
 
         <>
-            <div className='sidebar'>
-                <h2>Sidebar</h2>
-                <button onClick={handleNewChat}>+ New Chat</button>
-                <ul className='history'>
-                    {chats &&
-                        chats.map((chat: Chat) => (
-                            <li key={chat._id}>
-                                <button onClick={() => handleSelectChat(chat._id)}>{chat.title}</button>
-                            </li>
-                        ))}
-                </ul>
-            </div>
+           <Sidebar setSelectedChat={setSelectedChat} chats={chats} />
 
 
             <div className='chat-grid'>
